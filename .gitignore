@@ -2,3 +2,7 @@ node_modules/
 Catálogo/
 temporary screenshots/
 *.log
+
+# Local Netlify folder
+.netlify
+publish/

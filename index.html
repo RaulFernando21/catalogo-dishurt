@@ -147,6 +147,36 @@ tailwind.config = {
     .reveal { opacity: 1; transform: none; transition: none; }
     .card, .chip, .plate img { transition: none; }
   }
+  @page { size: A4; margin: 12mm; }
+  @media print {
+    html, body { background: #ffffff !important; }
+    .grain::after { display: none; }
+    header .brand-strip, #chips, #search, #stats, .zoom-hint, #empty, #modal,
+    header nav, header .chip { display: none !important; }
+    header { position: static !important; background: #20262B !important; border: 0 !important; }
+    header .brand-strip { display: none !important; }
+    .hero-glow { background: #20262B !important; padding: 0 0 8mm 0 !important; }
+    .hero-glow p:not(h1) { display: none !important; }
+    .hero-glow h1 { font-size: 24px !important; }
+    .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+    #grid { grid-template-columns: repeat(4, 1fr) !important; gap: 5mm !important; }
+    .card {
+      break-inside: avoid; page-break-inside: avoid;
+      box-shadow: none !important; border: 1px solid #ddd !important; border-radius: 6px !important;
+      background: #fff !important;
+    }
+    .card:hover { transform: none !important; }
+    .plate { border-radius: 6px 6px 0 0 !important; padding: 4mm !important; background: #f4f4f4 !important; border-bottom: 1px solid #eee !important; }
+    .plate img { filter: none !important; }
+    .card .px-4 { padding: 3mm 4mm 4mm !important; }
+    #grid > .card:nth-child(4n) { break-after: auto; }
+    main { padding-bottom: 4mm !important; }
+    footer { background: #20262B !important; border: 0 !important; }
+    footer .border-t { display: none !important; }
+    footer .grid { grid-template-columns: 1fr 1fr !important; padding: 6mm 0 !important; }
+    footer #footer-cats { display: none !important; }
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  }
 </style>
 </head>
 <body class="font-body">
