@@ -1,0 +1,12 @@
+{
+  "name": "catalogo-dishurt",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node serve.mjs"
+  },
+  "devDependencies": {
+    "puppeteer-core": "^25.6.0"
+  }
+}

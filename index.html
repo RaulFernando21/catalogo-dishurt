@@ -1,0 +1,419 @@
+﻿<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Distribuidora Dishurt SAC — Catálogo</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23F2A01E'/%3E%3Ctext x='32' y='46' font-family='Arial Black,Arial' font-size='38' font-weight='900' text-anchor='middle' fill='%2320262B'%3ED%3C/text%3E%3C/svg%3E">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        steel: { 950:"#14181C", 900:"#20262B", 800:"#2B333A", 700:"#3A444D" },
+        brand: { DEFAULT:"#F2A01E", light:"#FFB84D", dark:"#C97E0E", deep:"#8A560A" },
+        cream: { DEFAULT:"#F5F2EC", dark:"#E9E4D9", light:"#FBF9F4" }
+      },
+      fontFamily: {
+        display: ["Oswald","sans-serif"],
+        body: ["Inter","sans-serif"]
+      }
+    }
+  }
+}
+</script>
+<style>
+  html { scroll-behavior: smooth; }
+  body { background: #F5F2EC; color: #20262B; -webkit-font-smoothing: antialiased; }
+  ::selection { background: rgba(242,160,30,.35); }
+  .grain { position: relative; }
+  .grain::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .08;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .card {
+    background: #FDFCF8;
+    border: 1px solid rgba(32,38,43,.08);
+    border-radius: 18px;
+    box-shadow:
+      0 1px 2px rgba(20,24,28,.06),
+      0 10px 30px -18px rgba(20,24,28,.28),
+      0 0 0 1px rgba(242,160,30,0) ;
+    transition: transform .45s cubic-bezier(.34,1.56,.64,1), box-shadow .45s cubic-bezier(.34,1.56,.64,1), border-color .3s;
+    will-change: transform;
+  }
+  .card:hover { transform: translateY(-5px); box-shadow:
+      0 1px 2px rgba(20,24,28,.07),
+      0 24px 48px -24px rgba(242,160,30,.45),
+      0 0 0 1px rgba(242,160,30,.28); }
+  .card:focus-visible, .chip:focus-visible, .search:focus-visible { outline: 3px solid rgba(242,160,30,.5); outline-offset: 2px; }
+  .plate {
+    aspect-ratio: 4/3;
+    background:
+      radial-gradient(120% 90% at 50% 0%, #FBF9F4 0%, #EFEAE0 55%, #E4DED1 100%);
+    border-bottom: 1px solid rgba(32,38,43,.07);
+    border-radius: 18px 18px 0 0;
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    padding: 18px;
+  }
+  .plate img {
+    max-width: 100%; max-height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 18px rgba(20,24,28,.18));
+    transition: transform .5s cubic-bezier(.34,1.56,.64,1);
+  }
+  .card:hover .plate img { transform: scale(1.045); }
+  .chip {
+    transition: transform .35s cubic-bezier(.34,1.56,.64,1), background .25s, color .25s, box-shadow .35s cubic-bezier(.34,1.56,.64,1);
+  }
+  .chip:hover { transform: translateY(-2px); }
+  .chip:active { transform: translateY(0) scale(.97); }
+  .chip.is-active { background:#20262B; color:#F5F2EC; box-shadow: 0 10px 22px -12px rgba(20,24,28,.55); }
+  .hero-glow { background:
+      radial-gradient(80% 60% at 18% 12%, rgba(242,160,30,.16) 0%, transparent 60%),
+      radial-gradient(60% 50% at 85% 20%, rgba(255,184,77,.10) 0%, transparent 60%),
+      linear-gradient(180deg, #20262B 0%, #171B1F 100%); }
+  .reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .7s cubic-bezier(.22,1,.36,1); }
+  .reveal.in { opacity: 1; transform: none; }
+  .brand-strip { background: linear-gradient(90deg, #C97E0E, #F2A01E 45%, #FFB84D 60%, #C97E0E); }
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: center;
+    padding: 1rem;
+    background: rgba(20,24,28,.82);
+    backdrop-filter: blur(6px);
+    opacity: 0; visibility: hidden; pointer-events: none;
+    transition: opacity .3s ease, visibility .3s;
+  }
+  .modal-overlay.open { opacity: 1; visibility: visible; pointer-events: auto; }
+  .modal-panel {
+    background: #FDFCF8;
+    border-radius: 20px;
+    width: min(960px, 100%);
+    max-height: 90vh;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    box-shadow:
+      0 2px 4px rgba(20,24,28,.2),
+      0 32px 80px -24px rgba(20,24,28,.7),
+      0 0 0 1px rgba(242,160,30,.25);
+    transform: translateY(14px) scale(.98);
+    transition: transform .45s cubic-bezier(.34,1.56,.64,1);
+  }
+  .modal-overlay.open .modal-panel { transform: none; }
+  .modal-imgwrap {
+    background:
+      radial-gradient(120% 90% at 50% 0%, #FBF9F4 0%, #EFEAE0 55%, #E4DED1 100%);
+    display: flex; align-items: center; justify-content: center;
+    padding: 2rem;
+    border-radius: 20px 0 0 20px;
+    min-height: 320px;
+  }
+  .modal-imgwrap img { max-width: 100%; max-height: 62vh; object-fit: contain; }
+  .modal-close {
+    position: absolute; top: 12px; right: 12px; z-index: 2;
+    width: 40px; height: 40px; border-radius: 9999px;
+    background: rgba(32,38,43,.9); color: #F5F2EC;
+    display: grid; place-items: center;
+    transition: transform .35s cubic-bezier(.34,1.56,.64,1), background .25s, color .25s;
+  }
+  .modal-close:hover { transform: rotate(90deg); background: #F2A01E; color: #14181C; }
+  .modal-close:active { transform: rotate(90deg) scale(.92); }
+  .modal-close:focus-visible { outline: 3px solid rgba(242,160,30,.6); outline-offset: 2px; }
+  .zoom-hint {
+    position: absolute; right: 12px; bottom: 12px; z-index: 1;
+    width: 34px; height: 34px; border-radius: 9999px;
+    background: rgba(32,38,43,.82); color: #F5F2EC;
+    display: grid; place-items: center;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity .3s ease, transform .35s cubic-bezier(.34,1.56,.64,1), background .25s;
+    pointer-events: none;
+  }
+  .card:hover .zoom-hint, .card:focus-visible .zoom-hint { opacity: 1; transform: none; }
+  .card .plate { position: relative; }
+  @media (max-width: 720px) {
+    .modal-panel { grid-template-columns: 1fr; max-height: 92vh; }
+    .modal-imgwrap { border-radius: 20px 20px 0 0; min-height: 220px; padding: 1rem; }
+    .modal-imgwrap img { max-height: 40vh; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+    .card, .chip, .plate img { transition: none; }
+  }
+</style>
+</head>
+<body class="font-body">
+
+<header class="sticky top-0 z-50 bg-steel-900/95 backdrop-blur grain border-b-2 brand-strip">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+    <a href="#" class="flex items-center gap-3 group">
+      <span class="w-10 h-10 rounded-xl bg-brand grid place-items-center font-display font-700 text-steel-900 text-xl shadow-[0_8px_20px_-8px_rgba(242,160,30,.8)] transition-transform duration-500 group-hover:rotate-[-6deg]" style="font-weight:700">D</span>
+      <span class="leading-tight">
+        <span class="block font-display font-semibold text-cream-light text-lg tracking-[-0.02em] uppercase">Dishurt</span>
+        <span class="block text-[11px] uppercase tracking-[0.28em] text-brand-light/90">Distribuidora SAC</span>
+      </span>
+    </a>
+    <nav class="hidden md:flex items-center gap-8 text-[13px] font-medium uppercase tracking-[0.14em] text-cream-light/70">
+      <a href="#catalogo" class="hover:text-brand-light transition-colors">Catálogo</a>
+      <a href="#categorias" class="hover:text-brand-light transition-colors">Categorías</a>
+      <a href="#contacto" class="hover:text-brand-light transition-colors">Contacto</a>
+    </nav>
+    <a href="#catalogo" class="chip inline-flex items-center gap-2 rounded-full bg-brand text-steel-900 text-[12px] font-bold uppercase tracking-[0.12em] px-4 py-2 shadow-[0_10px_22px_-10px_rgba(242,160,30,.9)]">
+      Ver catálogo
+    </a>
+  </div>
+</header>
+
+<section class="hero-glow grain text-cream-light">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-14 text-center">
+    <p class="reveal font-display uppercase tracking-[0.34em] text-brand-light text-xs sm:text-sm mb-4">Ferretería industrial y del hogar</p>
+    <h1 class="reveal font-display font-bold uppercase text-4xl sm:text-6xl lg:text-7xl tracking-[-0.02em] leading-[0.95] text-cream-light">
+      Todo para tu<br>proyecto, <span class="text-brand-light">en un solo lugar</span>
+    </h1>
+    <p class="reveal mt-5 max-w-2xl mx-auto text-cream-light/70 text-sm sm:text-base leading-relaxed">
+      Herramientas, tornillería, electricidad y más. Productos seleccionados de nuestros proveedores, unificados en un catálogo propio.
+    </p>
+    <div class="reveal mt-8 max-w-xl mx-auto relative">
+      <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-steel-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="m21 21-4.3-4.3"/></svg>
+      <input id="search" type="search" placeholder="Buscar producto (ej: taladro, candado, lijadora…)"
+        class="search w-full rounded-2xl bg-cream-light text-steel-900 placeholder-steel-700/45 py-4 pl-12 pr-4 text-sm sm:text-base shadow-[0_18px_40px_-20px_rgba(20,24,28,.9)] ring-1 ring-white/10 focus:ring-2 focus:ring-brand-light transition-shadow">
+    </div>
+    <div id="stats" class="reveal mt-6 text-[12px] uppercase tracking-[0.22em] text-cream-light/50 font-medium"></div>
+  </div>
+</section>
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20" id="catalogo">
+  <div id="chips" class="reveal sticky top-16 z-40 -mx-4 px-4 sm:mx-0 sm:px-0 py-4 bg-cream/90 backdrop-blur flex flex-wrap gap-2"></div>
+
+  <div id="grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5"></div>
+
+  <div id="empty" class="hidden text-center py-24">
+    <p class="font-display uppercase text-2xl tracking-tight text-steel-700">Sin resultados</p>
+    <p class="mt-2 text-sm text-steel-700/60">Prueba con otra búsqueda o quita los filtros.</p>
+  </div>
+</main>
+
+<footer id="contacto" class="bg-steel-950 grain text-cream-light/70 mt-6 border-t-2 brand-strip">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 grid gap-10 sm:grid-cols-3">
+    <div>
+      <div class="flex items-center gap-3">
+        <span class="w-9 h-9 rounded-lg bg-brand grid place-items-center font-display text-steel-900 text-lg" style="font-weight:700">D</span>
+        <span class="font-display font-semibold uppercase tracking-tight text-cream-light text-lg">Dishurt</span>
+      </div>
+      <p class="mt-4 text-sm leading-relaxed">Distribuidora Dishurt SAC. Ferretería industrial, herramientas y artículos para el hogar.</p>
+    </div>
+    <div class="text-sm space-y-3">
+      <p class="font-display uppercase tracking-[0.18em] text-brand-light text-xs">Contacto</p>
+      <p class="flex items-center gap-3"><svg class="w-4 h-4 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.08 4.18 2 2 0 0 1 4.06 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg> (+51) 999 000 000</p>
+      <p class="flex items-center gap-3"><svg class="w-4 h-4 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.66 16.66 13.41 20.9a2 2 0 0 1-2.83 0l-4.24-4.24a2 2 0 0 1 0-2.83l4.24-4.24a2 2 0 0 1 2.83 0l4.24 4.24a2 2 0 0 1 0 2.83z"/><path stroke-linecap="round" stroke-linejoin="round" d="m15 5 4 4"/><path stroke-linecap="round" stroke-linejoin="round" d="m13 7 2 2"/><path stroke-linecap="round" stroke-linejoin="round" d="m10 10 2 2"/><path stroke-linecap="round" stroke-linejoin="round" d="m8 12 2 2"/></svg> ventas@dishurt.pe</p>
+    </div>
+    <div class="text-sm space-y-3">
+      <p class="font-display uppercase tracking-[0.18em] text-brand-light text-xs">Categorías</p>
+      <div id="footer-cats" class="flex flex-wrap gap-2"></div>
+    </div>
+  </div>
+  <div class="border-t border-white/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 text-[11px] uppercase tracking-[0.22em] text-cream-light/40">
+      © 2026 Distribuidora Dishurt SAC · Catálogo de productos
+    </div>
+  </div>
+</footer>
+
+<div id="modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal-panel relative">
+    <button id="modal-close" class="modal-close" aria-label="Cerrar detalle">
+      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <div class="modal-imgwrap"><img id="modal-img" alt=""></div>
+    <div class="p-6 sm:p-7">
+      <span id="modal-cat" class="inline-block text-[10px] font-bold uppercase tracking-[0.18em] text-brand-dark bg-brand/10 rounded-full px-2.5 py-1"></span>
+      <h2 id="modal-title" class="mt-3 font-display font-semibold uppercase text-2xl sm:text-3xl tracking-[-0.02em] leading-tight text-steel-900"></h2>
+      <div id="modal-ficha" class="mt-5"></div>
+      <h3 class="mt-7 font-display uppercase tracking-[0.18em] text-steel-700/60 text-xs">Descripción</h3>
+      <p id="modal-desc" class="mt-2 text-sm leading-relaxed text-steel-800/85"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+(async function () {
+  var PRODS = [];
+  try {
+    PRODS = await (await fetch("data/productos.json")).json();
+  } catch (err) {
+    var emptyEl = document.getElementById("empty");
+    emptyEl.classList.remove("hidden");
+    var ps = emptyEl.querySelectorAll("p");
+    ps[0].textContent = "No se pudo cargar el catálogo";
+    ps[1].textContent = "Revisa que el archivo data/productos.json exista.";
+  }
+  var state = { q: "", cat: "Todos" };
+  var $grid = document.getElementById("grid");
+  var $chips = document.getElementById("chips");
+  var $search = document.getElementById("search");
+  var $empty = document.getElementById("empty");
+  var $stats = document.getElementById("stats");
+  var $footerCats = document.getElementById("footer-cats");
+
+  function norm(s) {
+    return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  }
+
+  function cats() {
+    var map = {};
+    PRODS.forEach(function (p) { map[p.categoria] = (map[p.categoria] || 0) + 1; });
+    var list = Object.keys(map).sort(function (a, b) { return map[b] - map[a]; });
+    return list;
+  }
+
+  function renderChips() {
+    var list = cats();
+    var all = ["Todos"].concat(list);
+    $chips.innerHTML = "";
+    all.forEach(function (c) {
+      var n = c === "Todos" ? PRODS.length : PRODS.filter(function (p) { return p.categoria === c; }).length;
+      var b = document.createElement("button");
+      b.className = "chip rounded-full text-[12px] font-bold uppercase tracking-[0.08em] px-4 py-2 ring-1 ring-steel-800/15 bg-cream-light text-steel-800" + (c === state.cat ? " is-active" : "");
+      b.innerHTML = c + ' <span class="opacity-50 font-semibold">' + n + "</span>";
+      b.addEventListener("click", function () { state.cat = c; renderChips(); render(); });
+      b.setAttribute("aria-pressed", c === state.cat);
+      $chips.appendChild(b);
+    });
+    $footerCats.innerHTML = "";
+    list.forEach(function (c) {
+      var s = document.createElement("span");
+      s.className = "rounded-full px-3 py-1 bg-white/5 ring-1 ring-white/10 text-cream-light/80 text-[11px] font-semibold uppercase tracking-wide";
+      s.textContent = c;
+      $footerCats.appendChild(s);
+    });
+  }
+
+  function card(p, i) {
+    var a = document.createElement("article");
+    a.className = "card reveal cursor-pointer";
+    if (i < 12) a.classList.add("in");
+    a.setAttribute("tabindex", "0");
+    a.setAttribute("role", "button");
+    a.setAttribute("aria-haspopup", "dialog");
+    a.setAttribute("aria-label", "Ver detalle de " + p.nombre);
+    a.innerHTML =
+      '<div class="plate"><img src="assets/' + p.img + '" alt="' + p.nombre + '" loading="lazy"><span class="zoom-hint" aria-hidden="true"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="m21 21-4.3-4.3M11 8v6M8 11h6"/></svg></span></div>' +
+      '<div class="px-4 pt-4 pb-5">' +
+        '<span class="inline-block text-[10px] font-bold uppercase tracking-[0.18em] text-brand-dark bg-brand/10 rounded-full px-2.5 py-1">' + p.categoria + "</span>" +
+        '<h3 class="mt-3 font-display font-medium text-[15px] sm:text-base leading-snug tracking-[-0.01em] text-steel-900">' + p.nombre + "</h3>" +
+      "</div>";
+    a.addEventListener("click", function () { openProduct(p); });
+    a.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openProduct(p); }
+    });
+    return a;
+  }
+
+  function render() {
+    var q = norm(state.q);
+    var out = PRODS.filter(function (p) {
+      var okCat = state.cat === "Todos" || p.categoria === state.cat;
+      var okQ = !q || norm(p.nombre).indexOf(q) !== -1;
+      return okCat && okQ;
+    });
+    $grid.innerHTML = "";
+    out.forEach(function (p, i) { $grid.appendChild(card(p, i)); });
+    $empty.classList.toggle("hidden", out.length !== 0);
+    $stats.textContent = out.length + " producto" + (out.length === 1 ? "" : "s");
+    if (out.length) requestAnimationFrame(observe);
+  }
+
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
+  }, { rootMargin: "0px 0px -8% 0px" });
+  function observe() { Array.prototype.forEach.call(document.querySelectorAll(".card.reveal:not(.in)"), function (el) { io.observe(el); }); }
+
+  var $modal = document.getElementById("modal");
+  var $modalClose = document.getElementById("modal-close");
+  var lastFocus = null;
+
+  function openProduct(p) {
+    var img = document.getElementById("modal-img");
+    img.src = "assets/" + p.img;
+    img.alt = p.nombre;
+    document.getElementById("modal-title").textContent = p.nombre;
+    document.getElementById("modal-cat").textContent = p.categoria;
+
+    var ficha = document.getElementById("modal-ficha");
+    ficha.innerHTML = "";
+    var rows = [
+      ["Marca", p.marca],
+      ["Códigos", p.codigos],
+      ["Medidas", p.medidas],
+      ["Presentaciones", p.presentaciones],
+      ["Cantidades", p.cantidades]
+    ].filter(function (r) { return r[1] && String(r[1]).trim(); });
+    if (rows.length) {
+      var head = document.createElement("h3");
+      head.className = "font-display uppercase tracking-[0.18em] text-steel-700/60 text-xs";
+      head.textContent = "Ficha técnica";
+      ficha.appendChild(head);
+      rows.forEach(function (row) {
+        var d = document.createElement("div");
+        d.className = "flex justify-between gap-6 py-2.5 border-b border-steel-900/10";
+        var s = document.createElement("span");
+        s.className = "text-[11px] uppercase tracking-[0.14em] text-steel-700/55 shrink-0 pt-0.5";
+        s.textContent = row[0];
+        var v = document.createElement("span");
+        v.className = "text-right text-sm font-semibold text-steel-900";
+        v.textContent = row[1];
+        d.appendChild(s);
+        d.appendChild(v);
+        ficha.appendChild(d);
+      });
+    } else {
+      var none = document.createElement("p");
+      none.className = "text-sm text-steel-700/50";
+      none.textContent = "Sin datos técnicos registrados.";
+      ficha.appendChild(none);
+    }
+
+    var desc = document.getElementById("modal-desc");
+    desc.textContent = p.descripcion && p.descripcion.trim() ? p.descripcion : "Sin descripción registrada.";
+
+    lastFocus = document.activeElement;
+    $modal.classList.add("open");
+    document.body.style.overflow = "hidden";
+    $modalClose.focus();
+  }
+
+  function closeModal() {
+    $modal.classList.remove("open");
+    document.body.style.overflow = "";
+    if (lastFocus) lastFocus.focus();
+  }
+
+  $modalClose.addEventListener("click", closeModal);
+  $modal.addEventListener("click", function (e) { if (e.target === $modal) closeModal(); });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") closeModal();
+    if (e.key === "Tab" && $modal.classList.contains("open")) {
+      var focusables = Array.prototype.filter.call($modal.querySelectorAll("button, [tabindex]"), function (el) { return !el.hasAttribute("disabled"); });
+      if (!focusables.length) return;
+      var first = focusables[0];
+      var last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+
+  $search.addEventListener("input", function () { state.q = this.value; render(); });
+
+  renderChips();
+  render();
+})();
+</script>
+</body>
+</html>
